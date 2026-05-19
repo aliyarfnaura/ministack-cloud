@@ -10,7 +10,7 @@ Route::get('/', function () {
     return redirect()->route('dashboard');
 });
 
-// ───── AUTH ROUTES ─────
+// ───── AUTH ROUTES ───────
 Route::middleware('guest')->group(function () {
     // Login
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
