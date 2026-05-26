@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('paket_langganans', function (Blueprint $table) {
-        $table->id();
-        $table->string('nama_paket');
-        $table->integer('kapasitas_gb');
-        $table->integer('harga');
-        $table->timestamps();
-    });
+        Schema::create('buckets', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+        });
     }
 
     /**
@@ -25,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('paket_langganans');
+        Schema::dropIfExists('buckets');
     }
 };

@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('log_aktivitas', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('user_id');
-        $table->string('aktivitas');
-        $table->timestamps();
-    });
+        Schema::create('user_subscriptions', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+        });
     }
 
     /**
@@ -24,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('log_aktivitas');
+        Schema::dropIfExists('user_subscriptions');
     }
 };
