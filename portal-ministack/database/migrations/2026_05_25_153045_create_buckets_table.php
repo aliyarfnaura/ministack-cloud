@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('buckets', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('bucket_name', 100);
+            $table->string('ministack_bucket_id')->nullable();
+            $table->integer('used_storage_mb')->default(0);
             $table->timestamps();
         });
     }

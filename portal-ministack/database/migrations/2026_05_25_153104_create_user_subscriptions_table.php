@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('user_subscriptions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('plan_id')->constrained('subscription_plans')->onDelete('cascade');
+            $table->timestamp('subscribed_at')->useCurrent();
+            $table->timestamp('expires_at')->nullable();
+            $table->enum('status', ['active', 'expired', 'cancelled'])->default('active');
             $table->timestamps();
         });
     }
