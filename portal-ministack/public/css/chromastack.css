@@ -761,3 +761,47 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+/* ════════════════════════════════════════════
+   Auth Form — Loading State & Validasi
+   ════════════════════════════════════════════ */
+
+.btn-primary.is-loading {
+    opacity: 0.75;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.form-match-hint {
+    display: block;
+    font-size: 0.8rem;
+    margin-top: 0.35rem;
+    font-weight: 600;
+    min-height: 1.1rem;
+}
+
+.form-match-hint.is-match {
+    color: #16a34a;
+}
+
+.form-match-hint.is-mismatch {
+    color: var(--candy-pink);
+}
+
+/* ════════════════════════════════════════════
+   Dashboard — Status Kuota
+   ════════════════════════════════════════════ */
+
+/* Progress bar berubah warna kalau kuota sudah mendekati/penuh */
+.progress-bar.is-warning {
+    background: var(--lemon-zip);
+}
+
+.progress-bar.is-danger {
+    background: var(--candy-pink);
+}
+
+.stat-note.is-danger {
+    color: var(--candy-pink);
+    font-weight: 700;
+}

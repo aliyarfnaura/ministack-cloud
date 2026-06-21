@@ -85,17 +85,5 @@
 @endsection
 
 @push('scripts')
-<script>
-function togglePassword(id, btn) {
-    const input = document.getElementById(id);
-    const icon = btn.querySelector('i');
-    if (input.type === 'password') {
-        input.type = 'text';
-        icon.className = 'fa fa-eye-slash';
-    } else {
-        input.type = 'password';
-        icon.className = 'fa fa-eye';
-    }
-}
-</script>
+<script src="{{ asset('js/auth.js') }}"></script>
 @endpush

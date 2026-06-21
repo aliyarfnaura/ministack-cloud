@@ -27,6 +27,18 @@
 
     <div class="stats-grid">
 
+        @php
+            // Persentase pemakaian (0 kalau belum ada kuota sama sekali)
+            $usagePercent = $realData['storage_total'] > 0
+                ? ($realData['storage_used'] / $realData['storage_total']) * 100
+                : 0;
+
+            // Sisa kuota tidak boleh negatif walau pemakaian melebihi total (over-quota)
+            $remainingMb = max(0, $realData['storage_total'] - $realData['storage_used']);
+            $isOverQuota = $realData['storage_used'] > $realData['storage_total'];
+
+            $barClass = $isOverQuota ? 'is-danger' : ($usagePercent >= 80 ? 'is-warning' : '');
+        @endphp
         <div class="stat-card glass card-storage">
             <div class="stat-icon">
                 <i class="fa fa-database"></i>
@@ -35,9 +47,13 @@
                 <p class="stat-label">Storage Terpakai</p>
                 <p class="stat-value">{{ $realData['storage_used'] }} MB <span>/ {{ $realData['storage_total'] }} MB</span></p>
                 <div class="progress-bar-wrap">
-                    <div class="progress-bar" style="width: {{ $realData['storage_total'] > 0 ? ($realData['storage_used'] / $realData['storage_total']) * 100 : 0 }}%"></div>
+                    <div class="progress-bar {{ $barClass }}" style="width: {{ min(100, $usagePercent) }}%"></div>
                 </div>
-                <p class="stat-note">{{ $realData['storage_total'] - $realData['storage_used'] }} MB tersisa</p>
+                @if ($isOverQuota)
+                    <p class="stat-note is-danger"><i class="fa fa-triangle-exclamation"></i> Kuota terlampaui</p>
+                @else
+                    <p class="stat-note">{{ $remainingMb }} MB tersisa</p>
+                @endif
             </div>
         </div>
 
