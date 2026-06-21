@@ -33,11 +33,11 @@
             </div>
             <div class="stat-info">
                 <p class="stat-label">Storage Terpakai</p>
-                <p class="stat-value">{{ $realData['storage_used'] }} <span>/ {{ $realData['storage_total'] }} GB</span></p>
+                <p class="stat-value">{{ $realData['storage_used'] }} MB <span>/ {{ $realData['storage_total'] }} MB</span></p>
                 <div class="progress-bar-wrap">
                     <div class="progress-bar" style="width: {{ $realData['storage_total'] > 0 ? ($realData['storage_used'] / $realData['storage_total']) * 100 : 0 }}%"></div>
                 </div>
-                <p class="stat-note">{{ $realData['storage_total'] - $realData['storage_used'] }} GB tersisa</p>
+                <p class="stat-note">{{ $realData['storage_total'] - $realData['storage_used'] }} MB tersisa</p>
             </div>
         </div>
 

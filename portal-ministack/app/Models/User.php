@@ -49,15 +49,13 @@ class User extends Authenticatable
         return $this->hasMany(UserSubscription::class);
     }
 
-    // bucket storage user
-    public function buckets()
-    {
-        return $this->hasMany(Bucket::class);
-    }
-
-    // kredensial rahasia user
     public function credential()
     {
         return $this->hasOne(Credential::class);
+    }
+
+    public function buckets()
+    {
+        return $this->hasMany(Bucket::class);
     }
 }
