@@ -21,12 +21,15 @@ class AdminCredentialController extends Controller
         $status = $request->query('status', 'all');
 
         $credentials = Credential::with(['subscription.user', 'subscription.plan'])
+            ->whereHas('subscription', fn ($q) => $q->where('status', 'active'))
             ->when($status !== 'all', fn ($q) => $q->where('status_kunci', $status))
             ->latest()
             ->get();
 
-        $aktifCount   = Credential::where('status_kunci', 'Aktif')->count();
-        $dicabutCount = Credential::where('status_kunci', 'Dicabut')->count();
+        $aktifCount   = Credential::whereHas('subscription', fn ($q) => $q->where('status', 'active'))
+            ->where('status_kunci', 'Aktif')->count();
+        $dicabutCount = Credential::whereHas('subscription', fn ($q) => $q->where('status', 'active'))
+            ->where('status_kunci', 'Dicabut')->count();
 
         return view('admin.credentials.index', compact(
             'credentials', 'status', 'aktifCount', 'dicabutCount'

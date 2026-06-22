@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\IaasTransactionController;
 use App\Http\Controllers\UserController;
@@ -14,6 +15,40 @@ use App\Http\Controllers\UserController;
 | semuanya akan dimasukkan ke dalam grup "api".
 |
 */
+
+// ==========================================
+// Autentikasi API (bebas CSRF, untuk Postman)
+// ==========================================
+Route::post('/auth/login', function (Request $request) {
+    $request->validate([
+        'email'    => 'required|email',
+        'password' => 'required|string',
+    ]);
+
+    if (! Auth::attempt($request->only('email', 'password'))) {
+        return response()->json([
+            'message' => 'Email atau password salah.'
+        ], 401);
+    }
+
+    /** @var \App\Models\User $user */
+    $user = Auth::user();
+
+    // Hapus token lama agar tidak menumpuk
+    $user->tokens()->delete();
+    $token = $user->createToken('PostmanToken')->plainTextToken;
+
+    return response()->json([
+        'message' => 'Login berhasil.',
+        'token'   => $token,
+        'user'    => [
+            'id'    => $user->id,
+            'name'  => $user->name,
+            'email' => $user->email,
+            'role'  => $user->role,
+        ],
+    ]);
+});
 
 // Grup rute yang dilindungi oleh autentikasi token Sanctum
 Route::middleware('auth:sanctum')->group(function () {
