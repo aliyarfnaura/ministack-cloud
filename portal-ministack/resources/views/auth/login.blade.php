@@ -4,20 +4,17 @@
 @section('content')
 <div class="auth-wrapper">
 
-    <!-- Dekoratif background blob -->
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
     <div class="blob blob-3"></div>
 
     <div class="auth-card glass">
-        <!-- Logo -->
         <div class="auth-logo">
             <span class="logo-icon">🍬</span>
             <h1 class="logo-title">ChromaStack</h1>
             <p class="logo-subtitle">Cloud Platform · Candy Pop Edition</p>
         </div>
 
-        <!-- Error Message -->
         @if ($errors->any())
             <div class="alert alert-error">
                 <i class="fa fa-exclamation-circle"></i>
@@ -25,8 +22,7 @@
             </div>
         @endif
 
-        <!-- Login Form -->
-        <form id="apiLoginForm" class="auth-form">
+        <form id="apiLoginForm" class="auth-form" novalidate>
             @csrf
 
             <div class="form-group">
@@ -58,13 +54,16 @@
                         id="password"
                         name="password"
                         placeholder="••••••••"
-                        class="form-input"
+                        class="form-input @error('password') is-error @enderror"
                         required
                     >
                     <button type="button" class="toggle-pass" onclick="togglePassword('password', this)">
                         <i class="fa fa-eye"></i>
                     </button>
                 </div>
+                @error('password')
+                    <span class="form-error">{{ $message }}</span>
+                @enderror
             </div>
 
             <div class="form-check">

@@ -26,7 +26,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('register') }}" class="auth-form">
+        <form method="POST" action="{{ route('register') }}" class="auth-form" novalidate>
             @csrf
 
             <div class="form-group">

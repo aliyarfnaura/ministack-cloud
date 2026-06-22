@@ -100,10 +100,12 @@
                                 <td>{{ $payment->created_at->format('d M Y, H:i') }}</td>
                                 <td>
                                     @if ($payment->status_bayar === 'Pending')
-                                        <form method="POST" action="{{ route('admin.payments.verify', $payment) }}"
-                                              onsubmit="return confirm('ACC pembayaran #{{ $payment->id }} dari {{ $payment->subscription->user->name ?? 'pelanggan ini' }}? Infrastruktur IaaS akan langsung dialokasikan.');">
+                                        <form method="POST" action="{{ route('admin.payments.verify', $payment) }}" 
+                                              class="verify-form" 
+                                              data-payment-id="{{ $payment->id }}" 
+                                              data-customer-name="{{ $payment->subscription->user->name ?? 'pelanggan' }}">
                                             @csrf
-                                            <button type="submit" class="btn-primary btn-small">
+                                            <button type="button" class="btn-primary btn-small btn-verify">
                                                 <i class="fa fa-check"></i> ACC
                                             </button>
                                         </form>
@@ -118,7 +120,6 @@
             </div>
         @endif
     </section>
-
 </div>
 @endsection
 
@@ -129,5 +130,41 @@
         color: #fff;
         border-color: var(--candy-pink);
     }
+    /* Styling untuk SweetAlert2 Glassmorphism */
+    .swal2-popup.glass-popup {
+        border-radius: 20px !important;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.95) !important;
+    }
 </style>
+@endpush
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.querySelectorAll('.btn-verify').forEach(button => {
+        button.addEventListener('click', function() {
+            const form = this.closest('.verify-form');
+            const paymentId = form.dataset.paymentId;
+            const customerName = form.dataset.customerName;
+
+            Swal.fire({
+                title: 'Verifikasi Pembayaran?',
+                html: `ACC nota <b>#${paymentId}</b> dari <b>${customerName}</b>?<br><br><span style="font-size: 0.9em; color: #64748b;">Infrastruktur IaaS akan langsung dialokasikan setelah di-ACC.</span>`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#00a8ba',
+                cancelButtonColor: '#ff2e93',
+                confirmButtonText: '<i class="fa fa-check"></i> Ya, ACC Sekarang',
+                cancelButtonText: '<i class="fa fa-times"></i> Batal',
+                customClass: { popup: 'glass-popup' }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+</script>
 @endpush

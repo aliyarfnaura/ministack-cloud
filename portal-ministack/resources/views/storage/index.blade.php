@@ -125,23 +125,25 @@
         <div class="plan-grid">
             @foreach ($plans as $plan)
                 {{-- data-blocked dikirim ke JS agar alert-nya lebih informatif dari sisi client --}}
-                <div class="plan-card">
-                    <h3 class="plan-name">{{ $plan->name }}</h3>
-                    <p class="plan-description">{{ $plan->description }}</p>
+                <div class="plan-card plan-card-equal">
+                    <div class="plan-card-top">
+                        <h3 class="plan-name">{{ $plan->name }}</h3>
+                        <p class="plan-description plan-description-equal">{{ $plan->description }}</p>
 
-                    <div class="plan-price">
-                        Rp{{ number_format($plan->price, 0, ',', '.') }}
-                    </div>
-                    <div class="plan-period">per bulan</div>
-
-                    <div class="plan-features">
-                        <div class="plan-feature">
-                            <i class="fa fa-database"></i>
-                            Storage {{ $plan->storage_quota_gb }} GB
+                        <div class="plan-price">
+                            Rp{{ number_format($plan->price, 0, ',', '.') }}
                         </div>
-                        <div class="plan-feature">
-                            <i class="fa fa-box-archive"></i>
-                            Maks. Bucket {{ $plan->max_buckets }}
+                        <div class="plan-period">per bulan</div>
+
+                        <div class="plan-features">
+                            <div class="plan-feature">
+                                <i class="fa fa-database"></i>
+                                Storage {{ $plan->storage_quota_gb }} GB
+                            </div>
+                            <div class="plan-feature">
+                                <i class="fa fa-box-archive"></i>
+                                Maks. Bucket {{ $plan->max_buckets }}
+                            </div>
                         </div>
                     </div>
 
@@ -152,65 +154,67 @@
                         $showBlocked  = $blockCheckout && !$showUpgrade; // pending → blokir
                     @endphp
 
-                    @if ($showBlocked)
-                        {{-- Pending: tombol dikunci --}}
-                        <div style="margin-top:1rem;">
-                            <button type="button" class="btn-primary btn-full" disabled
-                                    style="opacity:0.5; cursor:not-allowed;">
-                                <i class="fa fa-lock"></i> Tidak Tersedia
-                            </button>
-                        </div>
-
-                    @elseif ($isPlanSame)
-                        {{-- Paket yang sedang aktif: tandai saja, tidak ada tombol --}}
-                        <div style="margin-top:1rem;">
-                            <button type="button" class="btn-primary btn-full" disabled
-                                    style="opacity:0.6; cursor:default;">
-                                <i class="fa fa-check-circle"></i> Paket Aktif Kamu
-                            </button>
-                        </div>
-
-                    @elseif ($showUpgrade)
-                        {{-- Active + paket berbeda: tampilkan tombol Upgrade --}}
-                        <form class="upgrade-api-form" data-plan-id="{{ $plan->id }}" style="margin-top:1rem;">
-                            <div style="margin-bottom:1rem;">
-                                <label style="display:block; margin-bottom:0.45rem; font-weight:800; color:var(--text-dark);">
-                                    Metode Bayar
-                                </label>
-                                <select name="metode_bayar" required
-                                        style="width:100%; padding:0.8rem 1rem; border-radius:14px; border:1px solid #e2e8f0; font-weight:700; color:var(--text-dark);">
-                                    <option value="">Pilih Metode Bayar</option>
-                                    <option value="Transfer Bank">Transfer Bank</option>
-                                    <option value="Virtual Account">Virtual Account</option>
-                                    <option value="E-Wallet">E-Wallet</option>
-                                </select>
+                    <div class="plan-card-bottom">
+                        @if ($showBlocked)
+                            {{-- Pending: tombol dikunci --}}
+                            <div>
+                                <button type="button" class="btn-primary btn-full" disabled
+                                        style="opacity:0.5; cursor:not-allowed;">
+                                    <i class="fa fa-lock"></i> Tidak Tersedia
+                                </button>
                             </div>
-                            <button type="submit" class="btn-primary btn-full"
-                                    style="background: linear-gradient(135deg, #a855f7, #6366f1);">
-                                <i class="fa fa-arrow-up"></i> Upgrade ke Paket Ini
-                            </button>
-                        </form>
 
-                    @else
-                        {{-- User baru: form checkout biasa (pola teman) --}}
-                        <form class="checkout-api-form" data-plan-id="{{ $plan->id }}" style="margin-top: 1rem;">
-                            <div style="margin-bottom: 1rem;">
-                                <label style="display:block; margin-bottom:0.45rem; font-weight:800; color:var(--text-dark);">
-                                    Metode Bayar
-                                </label>
-                                <select name="metode_bayar" required
-                                        style="width:100%; padding:0.8rem 1rem; border-radius:14px; border:1px solid #e2e8f0; font-weight:700; color:var(--text-dark);">
-                                    <option value="">Pilih Metode Bayar</option>
-                                    <option value="Transfer Bank">Transfer Bank</option>
-                                    <option value="Virtual Account">Virtual Account</option>
-                                    <option value="E-Wallet">E-Wallet</option>
-                                </select>
+                        @elseif ($isPlanSame)
+                            {{-- Paket yang sedang aktif: tandai saja, tidak ada tombol --}}
+                            <div>
+                                <button type="button" class="btn-primary btn-full" disabled
+                                        style="opacity:0.6; cursor:default;">
+                                    <i class="fa fa-check-circle"></i> Paket Aktif Kamu
+                                </button>
                             </div>
-                            <button type="submit" class="btn-primary btn-full">
-                                <i class="fa fa-cart-shopping"></i> Ajukan Sewa
-                            </button>
-                        </form>
-                    @endif
+
+                        @elseif ($showUpgrade)
+                            {{-- Active + paket berbeda: tampilkan tombol Upgrade --}}
+                            <form class="upgrade-api-form" data-plan-id="{{ $plan->id }}" data-plan-name="{{ $plan->name }}" novalidate>
+                                <div style="margin-bottom:1rem;">
+                                    <label style="display:block; margin-bottom:0.45rem; font-weight:800; color:var(--text-dark);">
+                                        Metode Bayar
+                                    </label>
+                                    <select name="metode_bayar" required
+                                            style="width:100%; padding:0.8rem 1rem; border-radius:14px; border:1px solid #e2e8f0; font-weight:700; color:var(--text-dark);">
+                                        <option value="">Pilih Metode Bayar</option>
+                                        <option value="Transfer Bank">Transfer Bank</option>
+                                        <option value="Virtual Account">Virtual Account</option>
+                                        <option value="E-Wallet">E-Wallet</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn-primary btn-full"
+                                        style="background: linear-gradient(135deg, #a855f7, #6366f1);">
+                                    <i class="fa fa-arrow-up"></i> Upgrade ke Paket Ini
+                                </button>
+                            </form>
+
+                        @else
+                            {{-- User baru: form checkout biasa (pola teman) --}}
+                            <form class="checkout-api-form" data-plan-id="{{ $plan->id }}" data-plan-name="{{ $plan->name }}" novalidate>
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display:block; margin-bottom:0.45rem; font-weight:800; color:var(--text-dark);">
+                                        Metode Bayar
+                                    </label>
+                                    <select name="metode_bayar" required
+                                            style="width:100%; padding:0.8rem 1rem; border-radius:14px; border:1px solid #e2e8f0; font-weight:700; color:var(--text-dark);">
+                                        <option value="">Pilih Metode Bayar</option>
+                                        <option value="Transfer Bank">Transfer Bank</option>
+                                        <option value="Virtual Account">Virtual Account</option>
+                                        <option value="E-Wallet">E-Wallet</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn-primary btn-full">
+                                    <i class="fa fa-cart-shopping"></i> Ajukan Sewa
+                                </button>
+                            </form>
+                        @endif
+                    </div>
                 </div>
             @endforeach
         </div>
@@ -269,25 +273,102 @@
 </div>
 @endsection
 
+@push('styles')
+<style>
+    /* Styling untuk SweetAlert2 Glassmorphism (konsisten dengan halaman Verifikasi Pembayaran) */
+    .swal2-popup.glass-popup {
+        border-radius: 20px !important;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.95) !important;
+    }
+
+    /* ── Penyeragaman tinggi & alignment plan-card ── */
+    .plan-grid {
+        align-items: stretch; /* pastikan semua kartu dalam 1 baris setinggi yang paling tinggi */
+    }
+
+    .plan-card-equal {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .plan-card-top {
+        flex: 1 0 auto; /* bagian atas (judul, deskripsi, harga, fitur) mengisi ruang yang tersedia */
+        display: flex;
+        flex-direction: column;
+    }
+
+    .plan-description-equal {
+        min-height: 3.2em; /* cukup utk 2 baris teks, jadi posisi harga sejajar walau deskripsi beda panjang */
+        margin-bottom: 0.5rem;
+    }
+
+    .plan-card-bottom {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        /* mendorong blok form/tombol selalu menempel di bawah kartu, sejajar antar kartu */
+    }
+
+    .plan-card-equal .plan-card-bottom {
+        margin-top: auto;
+    }
+</style>
+@endpush
+
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    // ── Handler Ajukan Sewa (Checkout) ──
     document.querySelectorAll('.checkout-api-form').forEach((form) => {
         form.addEventListener('submit', async function (event) {
             event.preventDefault();
 
-            const planId = this.dataset.planId;
-            const metodeBayar = this.querySelector('select[name="metode_bayar"]').value;
-            const token = localStorage.getItem('auth_token');
+            const planId      = this.dataset.planId;
+            const planName    = this.dataset.planName || 'paket ini';
+            const select      = this.querySelector('select[name="metode_bayar"]');
+            const metodeBayar = select.value;
+            const token       = localStorage.getItem('auth_token');
 
             if (!metodeBayar) {
-                alert('Silakan pilih metode bayar terlebih dahulu.');
+                Swal.fire({
+                    title: 'Metode Bayar Belum Dipilih',
+                    text: 'Silakan pilih metode bayar terlebih dahulu sebelum mengajukan sewa.',
+                    icon: 'warning',
+                    confirmButtonColor: '#00a8ba',
+                    confirmButtonText: 'Oke',
+                    customClass: { popup: 'glass-popup' }
+                });
                 return;
             }
 
             if (!token) {
-                alert('Token API tidak ditemukan. Silakan login ulang terlebih dahulu.');
+                Swal.fire({
+                    title: 'Sesi Berakhir',
+                    text: 'Token API tidak ditemukan. Silakan login ulang terlebih dahulu.',
+                    icon: 'error',
+                    confirmButtonColor: '#ff2e93',
+                    confirmButtonText: 'Oke',
+                    customClass: { popup: 'glass-popup' }
+                });
                 return;
             }
+
+            // Konfirmasi sebelum kirim pengajuan
+            const confirmResult = await Swal.fire({
+                title: 'Ajukan Sewa Paket?',
+                html: `Kamu akan mengajukan paket <b>${planName}</b> dengan metode bayar <b>${metodeBayar}</b>.<br><br><span style="font-size: 0.9em; color: #64748b;">Pengajuan akan menunggu verifikasi admin sebelum aktif.</span>`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#00a8ba',
+                cancelButtonColor: '#ff2e93',
+                confirmButtonText: '<i class="fa fa-check"></i> Ya, Ajukan Sekarang',
+                cancelButtonText: '<i class="fa fa-times"></i> Batal',
+                customClass: { popup: 'glass-popup' }
+            });
+
+            if (!confirmResult.isConfirmed) return;
 
             const submitButton = this.querySelector('button[type="submit"]');
             const originalText = submitButton.innerHTML;
@@ -317,40 +398,79 @@
                     throw new Error(message);
                 }
 
-                alert(data.message || 'Pengajuan sewa berhasil dibuat.');
+                await Swal.fire({
+                    title: 'Berhasil!',
+                    text: data.message || 'Pengajuan sewa berhasil dibuat.',
+                    icon: 'success',
+                    confirmButtonColor: '#00a8ba',
+                    confirmButtonText: 'Oke',
+                    customClass: { popup: 'glass-popup' }
+                });
                 window.location.reload();
             } catch (error) {
-                alert(error.message);
+                Swal.fire({
+                    title: 'Gagal Mengajukan Sewa',
+                    text: error.message,
+                    icon: 'error',
+                    confirmButtonColor: '#ff2e93',
+                    confirmButtonText: 'Oke',
+                    customClass: { popup: 'glass-popup' }
+                });
             } finally {
                 submitButton.disabled = false;
                 submitButton.innerHTML = originalText;
             }
         });
     });
+
     // ── Handler Upgrade Paket ──
     document.querySelectorAll('.upgrade-api-form').forEach((form) => {
         form.addEventListener('submit', async function (event) {
             event.preventDefault();
 
             const planId      = this.dataset.planId;
-            const metodeBayar = this.querySelector('select[name="metode_bayar"]').value;
+            const planName    = this.dataset.planName || 'paket ini';
+            const select      = this.querySelector('select[name="metode_bayar"]');
+            const metodeBayar = select.value;
             const token       = localStorage.getItem('auth_token');
 
             if (!metodeBayar) {
-                alert('Silakan pilih metode bayar terlebih dahulu.');
+                Swal.fire({
+                    title: 'Metode Bayar Belum Dipilih',
+                    text: 'Silakan pilih metode bayar terlebih dahulu sebelum upgrade.',
+                    icon: 'warning',
+                    confirmButtonColor: '#00a8ba',
+                    confirmButtonText: 'Oke',
+                    customClass: { popup: 'glass-popup' }
+                });
                 return;
             }
 
             if (!token) {
-                alert('Token API tidak ditemukan. Silakan login ulang terlebih dahulu.');
+                Swal.fire({
+                    title: 'Sesi Berakhir',
+                    text: 'Token API tidak ditemukan. Silakan login ulang terlebih dahulu.',
+                    icon: 'error',
+                    confirmButtonColor: '#ff2e93',
+                    confirmButtonText: 'Oke',
+                    customClass: { popup: 'glass-popup' }
+                });
                 return;
             }
 
-            const confirmed = confirm(
-                'Upgrade paket akan menonaktifkan paket dan kredensial yang sedang aktif sekarang. ' +
-                'Kamu perlu menunggu verifikasi admin sebelum paket baru aktif.\n\nLanjutkan?'
-            );
-            if (!confirmed) return;
+            const confirmResult = await Swal.fire({
+                title: 'Upgrade ke Paket Ini?',
+                html: `Upgrade ke <b>${planName}</b> akan menonaktifkan paket dan kredensial yang sedang aktif sekarang.<br><br><span style="font-size: 0.9em; color: #64748b;">Kamu perlu menunggu verifikasi admin sebelum paket baru aktif.</span>`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#00a8ba',
+                cancelButtonColor: '#ff2e93',
+                confirmButtonText: '<i class="fa fa-arrow-up"></i> Ya, Upgrade Sekarang',
+                cancelButtonText: '<i class="fa fa-times"></i> Batal',
+                customClass: { popup: 'glass-popup' }
+            });
+
+            if (!confirmResult.isConfirmed) return;
 
             const submitButton  = this.querySelector('button[type="submit"]');
             const originalText  = submitButton.innerHTML;
@@ -374,10 +494,24 @@
                     throw new Error(data.message || data.error || 'Upgrade gagal.');
                 }
 
-                alert(data.message || 'Permintaan upgrade berhasil diajukan.');
+                await Swal.fire({
+                    title: 'Berhasil!',
+                    text: data.message || 'Permintaan upgrade berhasil diajukan.',
+                    icon: 'success',
+                    confirmButtonColor: '#00a8ba',
+                    confirmButtonText: 'Oke',
+                    customClass: { popup: 'glass-popup' }
+                });
                 window.location.reload();
             } catch (error) {
-                alert(error.message);
+                Swal.fire({
+                    title: 'Upgrade Gagal',
+                    text: error.message,
+                    icon: 'error',
+                    confirmButtonColor: '#ff2e93',
+                    confirmButtonText: 'Oke',
+                    customClass: { popup: 'glass-popup' }
+                });
             } finally {
                 submitButton.disabled  = false;
                 submitButton.innerHTML = originalText;
